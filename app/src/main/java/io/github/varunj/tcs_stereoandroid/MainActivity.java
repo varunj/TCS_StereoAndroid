@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText home_ip_right;
     private EditText home_path;
     private Button home_button;
+    private static final String IDENT_URL_IP_LEFT = "io.github.varunj.tcs_stereoandroid.urlipleft";
+    private static final String IDENT_URL_IP_RIGHT = "iio.github.varunj.tcs_stereoandroid.urlipright";
+    private static final String IDENT_URL_PATH = "io.github.varunj.tcs_stereoandroid.urlpath";
     static final int STEREO_REQUEST = 1;
 
     @Override
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 if (!(home_ip_left.getText().toString().equals("") || home_ip_right.getText().toString().equals("")
                         || home_path.getText().toString().equals(""))) {
                     Intent intent = new Intent(getApplicationContext(), StereoActivity.class);
+                    intent.putExtra(IDENT_URL_IP_LEFT, home_ip_left.getText().toString());
+                    intent.putExtra(IDENT_URL_IP_RIGHT, home_ip_right.getText().toString());
+                    intent.putExtra(IDENT_URL_PATH, home_path.getText().toString());
                     setResult(Activity.RESULT_OK, intent);
                     startActivityForResult(intent, STEREO_REQUEST);
                 }

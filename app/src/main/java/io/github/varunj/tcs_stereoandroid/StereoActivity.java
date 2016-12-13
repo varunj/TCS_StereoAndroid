@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Created by Varun on 13-12-2016.
@@ -12,12 +13,33 @@ import android.view.View;
 
 public class StereoActivity extends AppCompatActivity{
 
+    private static final String IDENT_URL_IP_LEFT = "io.github.varunj.tcs_stereoandroid.urlipleft";
+    private static final String IDENT_URL_IP_RIGHT = "iio.github.varunj.tcs_stereoandroid.urlipright";
+    private static final String IDENT_URL_PATH = "io.github.varunj.tcs_stereoandroid.urlpath";
+    private static String URL_LEFT= "";
+    private static String URL_RIGHT = "";
     static final int STEREO_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stereo);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            URL_LEFT = "http://" + extras.getString(IDENT_URL_IP_LEFT) + extras.getString(IDENT_URL_PATH);
+            URL_RIGHT = "http://" + extras.getString(IDENT_URL_IP_RIGHT) + extras.getString(IDENT_URL_PATH);
+        }
+
+        while (true) {
+            new GetImageAsync((ImageView) findViewById(R.id.home_imageLeft)).execute(URL_LEFT);
+            new GetImageAsync((ImageView) findViewById(R.id.home_imageRight)).execute(URL_RIGHT);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
