@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:stream="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorStereoBackground">
+    android:background="@color/colorStereoBackground"
+    >
 
-    <ImageView
+    <com.github.niqdev.mjpeg.MjpegSurfaceView
         android:id="@+id/home_imageLeft"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        stream:type="stream_default"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/noimage" />
+        android:src="@drawable/noimage"/>
 
-    <ImageView
+    <com.github.niqdev.mjpeg.MjpegSurfaceView
         android:id="@+id/home_imageRight"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        stream:type="stream_default"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/noimage" />
+        android:src="@drawable/noimage"/>
 
 </LinearLayout>

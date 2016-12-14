@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">xTCS_StereoAndroid</string>
 
-    <string name="home_heading">xTCS_StereoAndroid</string>
+    <string name="home_heading">StereoAndroid</string>
     <string name="home_ip_text_left">10.0.0.15</string>
     <string name="home_ip_text_right">10.0.0.16</string>
     <string name="home_ip_hint_left">Enter IP Addr Left</string>
     <string name="home_ip_hint_right">Enter IP Addr Right</string>
-    <string name="home_path">/picam/cam_pic.php</string>
+    <string name="home_path">/picam/cam_pic_new.php</string>
     <string name="home_button">LAUNCH</string>
 </resources>

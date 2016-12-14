@@ -4,8 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.github.niqdev.mjpeg.DisplayMode;
+import com.github.niqdev.mjpeg.Mjpeg;
+import com.github.niqdev.mjpeg.MjpegSurfaceView;
+import com.github.niqdev.mjpeg.MjpegView;
 
 /**
  * Created by Varun on 13-12-2016.
@@ -19,6 +25,10 @@ public class StereoActivity extends AppCompatActivity{
     private static String URL_LEFT= "";
     private static String URL_RIGHT = "";
     static final int STEREO_REQUEST = 1;
+    private static final int TIMEOUT = 5;
+
+    MjpegView home_imageLeft;
+    MjpegView home_imageRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +41,47 @@ public class StereoActivity extends AppCompatActivity{
             URL_RIGHT = "http://" + extras.getString(IDENT_URL_IP_RIGHT) + extras.getString(IDENT_URL_PATH);
         }
 
-        new GetImageAsync((ImageView) findViewById(R.id.home_imageLeft)).execute(URL_LEFT);
-        new GetImageAsync((ImageView) findViewById(R.id.home_imageRight)).execute(URL_RIGHT);
+        home_imageLeft = (MjpegSurfaceView) findViewById(R.id.home_imageLeft);
+        home_imageRight = (MjpegSurfaceView) findViewById(R.id.home_imageRight);
+    }
 
+    private void loadFeeds() {
+        Mjpeg.newInstance()
+                .open(URL_LEFT, TIMEOUT)
+                .subscribe(
+                        inputStream -> {
+                            home_imageLeft.setSource(inputStream);
+                            home_imageLeft.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
+                            home_imageLeft.showFps(true);
+                        },
+                        throwable -> {
+                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+                        });
+        Mjpeg.newInstance()
+                .open(URL_RIGHT, TIMEOUT)
+                .subscribe(
+                        inputStream -> {
+                            home_imageRight.setSource(inputStream);
+                            home_imageRight.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
+                            home_imageRight.showFps(true);
+                        },
+                        throwable -> {
+                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFeeds();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        home_imageLeft.stopPlayback();
+        home_imageRight.stopPlayback();
     }
 
     @Override
