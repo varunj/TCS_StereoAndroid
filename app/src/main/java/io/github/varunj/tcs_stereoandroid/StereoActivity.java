@@ -31,15 +31,9 @@ public class StereoActivity extends AppCompatActivity{
             URL_RIGHT = "http://" + extras.getString(IDENT_URL_IP_RIGHT) + extras.getString(IDENT_URL_PATH);
         }
 
-        while (true) {
-            new GetImageAsync((ImageView) findViewById(R.id.home_imageLeft)).execute(URL_LEFT);
-            new GetImageAsync((ImageView) findViewById(R.id.home_imageRight)).execute(URL_RIGHT);
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        new GetImageAsync((ImageView) findViewById(R.id.home_imageLeft)).execute(URL_LEFT);
+        new GetImageAsync((ImageView) findViewById(R.id.home_imageRight)).execute(URL_RIGHT);
+
     }
 
     @Override
