@@ -1,7 +1,6 @@
 package io.github.varunj.tcs_stereoandroid;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -45,36 +44,10 @@ public class StereoActivity extends AppCompatActivity{
         home_imageRight = (MjpegSurfaceView) findViewById(R.id.home_imageRight);
     }
 
-    private void loadFeeds() {
-        Mjpeg.newInstance()
-                .open(URL_LEFT, TIMEOUT)
-                .subscribe(
-                        inputStream -> {
-                            home_imageLeft.setSource(inputStream);
-                            home_imageLeft.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
-                            home_imageLeft.showFps(true);
-                        },
-                        throwable -> {
-                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
-                        });
-        Mjpeg.newInstance()
-                .open(URL_RIGHT, TIMEOUT)
-                .subscribe(
-                        inputStream -> {
-                            home_imageRight.setSource(inputStream);
-                            home_imageRight.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
-                            home_imageRight.showFps(true);
-                        },
-                        throwable -> {
-                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-                        });
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        loadFeeds();
+        new AsyncLoadFeeds().execute();
     }
 
     @Override
@@ -100,10 +73,52 @@ public class StereoActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        setResult(Activity.RESULT_OK, intent);
-        startActivityForResult(intent, STEREO_REQUEST);
-        finish();
+        super.onDestroy();
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        setResult(Activity.RESULT_OK, intent);
+//        startActivityForResult(intent, STEREO_REQUEST);
     }
+
+    private class AsyncLoadFeeds extends AsyncTask<Object, Object, Void> {
+        @Override
+        protected Void doInBackground(Object... urls) {
+            loadFeedLeft();
+            loadFeedRight();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+        }
+    }
+
+    private void loadFeedLeft() {
+        Mjpeg.newInstance()
+                .open(URL_LEFT, TIMEOUT)
+                .subscribe(
+                        inputStream -> {
+                            home_imageLeft.setSource(inputStream);
+                            home_imageLeft.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
+                            home_imageLeft.showFps(true);
+                        },
+                        throwable -> {
+                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+                        });
+    }
+    private void loadFeedRight()
+    {
+        Mjpeg.newInstance()
+                .open(URL_RIGHT, TIMEOUT)
+                .subscribe(
+                        inputStream -> {
+                            home_imageRight.setSource(inputStream);
+                            home_imageRight.setDisplayMode(DisplayMode.BEST_FIT); //DisplayMode.FULLSCREEN?
+                            home_imageRight.showFps(true);
+                        },
+                        throwable -> {
+                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                        });
+    }
+
 }
