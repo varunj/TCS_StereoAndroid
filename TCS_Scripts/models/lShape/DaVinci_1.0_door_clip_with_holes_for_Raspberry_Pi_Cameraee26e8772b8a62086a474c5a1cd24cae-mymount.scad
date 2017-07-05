@@ -1,0 +1,14 @@
+rotate([0.0,-90.0,0.0])union(){
+difference(){cube([5.0,50.0,1.0]);
+union(){
+translate([2.5,35.5,-0.5])
+color([1.0,0.0,0.0])
+cylinder(r=1.0,h=2.0,$fn=60);
+translate([2.5,48.0,-0.5])
+color([1.0,0.0,0.0])
+cylinder(r=1.0,h=2.0,$fn=60);
+}}
+cube([5.0,1.0,8.4]);
+translate([0.0,0.0,7.4])
+cube([5.0,15.0,1.0]);
+}
